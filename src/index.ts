@@ -8,10 +8,10 @@ mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string).then(()=>{cons
 const app = express();
 app.use(express.json());
 app.use(cors(
-  // {
-  //   credentials : true,
-  //   origin: 'http://localhost:5173',
-  // }
+  {
+    credentials : true,
+    origin: 'https://flaverfood-frontend.onrender.com',
+  }
   ))
 
 
