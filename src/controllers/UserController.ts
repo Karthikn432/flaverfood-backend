@@ -4,7 +4,6 @@ import User from "../models/user";
 const getCurrentUser =  async(req:Request, res:Response) =>{
     try {
         const currentUser = await User.findOne({_id: req.userId})
-
         if(!currentUser){
             return res.status(404).json({message :'User not found'})
         }
@@ -21,7 +20,7 @@ const createUser = async (req: Request, res: Response) => {
     // 3.Return the user object to the calling client
     try {
         const { auth0Id } = req.body;
-        console.log({ dump: req.body })
+
         const existingUser = await User.findOne({ auth0Id });
 
         if (existingUser) {
@@ -30,7 +29,6 @@ const createUser = async (req: Request, res: Response) => {
 
         const newUser = new User(req.body);
         await newUser.save();
-        console.log({ newUser })
         res.status(201).json(newUser.toObject())
     } catch (error) {
         console.log(error)
