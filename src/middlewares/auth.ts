@@ -14,15 +14,14 @@ declare global{
 
 export const jwtCheck = auth({
   audience: process.env.AUTH0_AUDIENCE,
-  issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL,
+  issuerBaseURL: process.env.AUTH0_ISSUE_BASE_URL,
   tokenSigningAlg: 'RS256'
 });
 
 
 export const jwtParse = async (req: Request, res: Response, next: NextFunction) => {
-  console.log('jwtParse')
   const { authorization } = req.headers;
-
+  console.log({authorization})
   if (!authorization || !authorization.startsWith("Bearer")) {
     return res.sendStatus(401)
   }
@@ -34,7 +33,6 @@ export const jwtParse = async (req: Request, res: Response, next: NextFunction) 
     const auth0Id = decoded.sub
 
     const user = await User.findOne({auth0Id})
-
     if(!user){
       return res.sendStatus(401)
     }
