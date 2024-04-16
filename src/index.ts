@@ -23,11 +23,11 @@ app.use(express.json());
 
 app.use(cors({
     credentials: true,
-    origin: 'https://flaverfood-frontend.onrender.com' //'http://localhost:5173' // 
+    origin:  'https://flaverfood-frontend.onrender.com' // 'http://localhost:5173' //
 }));
 
 app.use('/api/', userRoute);
-app.use('/api/', restaurantRoute);
+app.use('/api/restaurant', restaurantRoute);
 
 
 // Add a middleware to handle preflight requests
