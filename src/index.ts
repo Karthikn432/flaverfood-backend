@@ -1,9 +1,12 @@
-import express from 'express';
+import express, { application } from 'express';
 import cors from 'cors';
 import "dotenv/config";
 import mongoose from 'mongoose';
 import userRoute from './routes/UserRoute';
 import restaurantRoute from './routes/RestaurentRoute';
+import orderRoute from './routes/OrderRoute';
+import { Request, Response } from "express";
+
 import { v2 as cloudinary} from "cloudinary";
 
 mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string).then(() => {
@@ -19,15 +22,24 @@ cloudinary.config({
 
 const app = express();
 
-app.use(express.json());
-
 app.use(cors({
     credentials: true,
-    origin:  'https://flaverfood-frontend.onrender.com' // 'http://localhost:5173' //
+    origin: 'https://flaverfood-frontend.onrender.com' //  'http://localhost:5173' // 
 }));
+
+app.use("/api/order/checkout/webhook", express.raw({type : "*/*"}))
+
+app.use(express.json());
+
+
+// API Health CheckUp
+app.get("/health", async(Req: Request, res:Response) =>{
+    res.send({message : "health OK!"})
+})
 
 app.use('/api/', userRoute);
 app.use('/api/restaurant', restaurantRoute);
+app.use('/api/order', orderRoute);
 
 
 // Add a middleware to handle preflight requests
