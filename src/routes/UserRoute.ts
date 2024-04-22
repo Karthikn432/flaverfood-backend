@@ -7,7 +7,7 @@ import { validateUserRequest } from '../middlewares/validation';
 const router = express.Router();
 
 router.route('/getUser').get(jwtCheck, jwtParse, getCurrentUser)
-router.route('/register').post(jwtCheck, jwtParse, createUser)
+router.route('/register').post(jwtCheck,createUser)
 // validateUserRequest not worked need to check
 router.route('/updateUser').put(jwtCheck, jwtParse, validateUserRequest, updateCurrentUser)
 

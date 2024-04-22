@@ -24,7 +24,7 @@ const app = express();
 
 app.use(cors({
     credentials: true,
-    origin: 'https://flaverfood-frontend.onrender.com' //  'http://localhost:5173' // 
+    origin:  'https://flaverfood-frontend.onrender.com' //  'http://localhost:5173' //
 }));
 
 app.use("/api/order/checkout/webhook", express.raw({type : "*/*"}))
