@@ -9,15 +9,10 @@ import Order from "../models/order";
 const CreateMyRestaurant = async (req: Request, res: Response) => {
     try {
         if (!req.userId) {
-            console.log({ first: req.userId })
             return res.status(401).json({ message: "Unauthorized" });
         }
 
-        console.log('CreateMyRestaurant')
-        console.log({ id: req.userId })
         const existingRestaurant = await Restaurant.findOne({ user: req.userId })
-        console.log({ id: req.userId, existingRestaurant })
-
 
         if (existingRestaurant) {
             return res.status(409).json({ message: "User restaurant already exists" })
@@ -44,15 +39,13 @@ const CreateMyRestaurant = async (req: Request, res: Response) => {
 
 const getMyRestaurant = async (req: Request, res: Response) => {
     try {
-        console.log({ uid: req.userId })
         const restaurant = await Restaurant.find({ user: req.userId })
-        console.log({ restaurant })
         if (!restaurant) {
             return res.status(404).json({ message: "Restaurant not found" })
         }
         res.json(restaurant)
     } catch (error) {
-        console.log("error", error)
+        console.log({error})
         res.status(500).json({
             message: "Error fetching restaurant"
         })
@@ -109,7 +102,6 @@ const searchRestaurants = async (req: Request, res: Response) => {
         const selectedCuisines = (req.query.selectedCuisines as string) || "";
         const sortOptions = (req.query.sortOptions as string) || "lastUpdated";
         const page = parseInt(req.query.page as string) || 1;
-        console.log({ page, selectedCuisines })
         let query: any = {};
 
         query["city"] = new RegExp(city, "i");
@@ -129,7 +121,6 @@ const searchRestaurants = async (req: Request, res: Response) => {
             //  URL = selectedCuisines= italian,burgers,chineese
             // [italian, burgers, chineese]
             // searchQuery = pasta
-            console.log({ selectedCuisines })
             const cuisinesArray = selectedCuisines.split(",").map((cuisine) => new RegExp(cuisine, "i"));
             query["cuisines"] = { $all: cuisinesArray }
         }
@@ -138,7 +129,6 @@ const searchRestaurants = async (req: Request, res: Response) => {
             // restaurantName = Taj Restaurant
             // [italian, burgers, chineese]
             // searchQuery = pasta
-            console.log({ searchQuery })
             const searchRegex = new RegExp(searchQuery, "i");
             query["$or"] = [
                 { restaurantName: searchRegex },
@@ -193,6 +183,13 @@ const getMyRestaurantOrders = async (req: Request, res: Response) => {
         if (!restaurant) {
             return res.status(404).json({ message: "Restaurant not found" })
         }
+
+/* 
+const orders = await Order.find({user :  req.userId})
+        .populate("restaurant")
+        .populate("user");
+
+        res.json(orders)*/
 
         const orders = await Order.find({ restaurant: restaurant.id })
             .populate("restaurant")
