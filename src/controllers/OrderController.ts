@@ -19,7 +19,7 @@ const getMyOrders = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log({error})
-        res.status(500).json({message : "Somethin went wrong"})
+        res.status(500).json({message : "Something went wrong"})
     }
 }
 
@@ -83,7 +83,6 @@ const createCheckoutSession = async (req: Request, res: Response) => {
         if (!restaurant) {
             throw new Error("Restaurant not found")
         }
-        console.log({ DD: checkoutSessionRequest.deliveryDetails })
         const newOrder = await new Order({
             restaurant: restaurant,
             user: req.userId,
@@ -92,13 +91,10 @@ const createCheckoutSession = async (req: Request, res: Response) => {
             cartItems: checkoutSessionRequest.cartItems,
             createdAt: new Date()
         })
-        console.log({ newOrder })
-        // console.log({restaurant})
         const lineItems = createLineItems(
             checkoutSessionRequest,
             restaurant.menuItems
         );
-        // console.log({ lineItems })
 
         const session = await createSession(
             lineItems,
@@ -108,7 +104,6 @@ const createCheckoutSession = async (req: Request, res: Response) => {
             restaurant._id.toString()
         );
 
-        // console.log({ session })
 
         if (!session.url) {
             return res.status(500).json({
@@ -151,7 +146,6 @@ const createLineItems = (checkoutSessionRequest: CheckoutSessionRequest, menuIte
             quantity: parseInt(cartItem.quantity)
 
         };
-        console.log({ line_item })
         return line_item;
     });
 

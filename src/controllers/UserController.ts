@@ -40,7 +40,6 @@ const createUser = async (req: Request, res: Response) => {
 
 const updateCurrentUser = async (req: Request, res: Response) => {
     try {
-        console.log({req : req.body})
         const { name, addressLine1, country, city } = req.body;
         const user = await User.findById(req.userId);
 
