@@ -61,7 +61,8 @@ const stripeWebhookHandler = async (req: Request, res: Response) => {
         if(!order){
             return res.status(404).json({message:`Order not found`})
         }
-
+        // console.log({totalAmount : event.data.object.amount_total});
+        
         order.totalAmount = event.data.object.amount_total;
         order.status = "paid";
 
@@ -138,7 +139,7 @@ const createLineItems = (checkoutSessionRequest: CheckoutSessionRequest, menuIte
         const line_item: Stripe.Checkout.SessionCreateParams.LineItem = {
             price_data: {
                 currency: "inr",
-                unit_amount: menuItem.price,// * 100,
+                unit_amount: menuItem.price * 100,
                 product_data: {
                     name: menuItem.name,
                 },
@@ -166,7 +167,7 @@ const createSession = async (
                     display_name: "Delivery",
                     type: "fixed_amount",
                     fixed_amount: {
-                        amount: deliveryPrice,
+                        amount: deliveryPrice * 100,
                         currency: "inr",
                     },
                 },
